@@ -277,12 +277,8 @@ class QRCode:
             totalDataCount += rsBlocks[i].dataCount
 
         if (buffer.getLengthInBits() > totalDataCount * 8):
-            raise Exception("code length overflow. ("
-                + buffer.getLengthInBits()
-                + ">"
-                +  totalDataCount * 8
-                + ")")
-
+            raise Exception("code length overflow. Data size (%s) > Size available (%d))" %(buffer.getLengthInBits(), totalDataCount * 8))
+            
         #// end code
         if (buffer.getLengthInBits() + 4 <= totalDataCount * 8):
             buffer.put(0, 4)
