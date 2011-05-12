@@ -20,6 +20,9 @@ from PIL import Image, ImageDraw
 #   http://www.denso-wave.com/qrcode/faqpatent-e.html
 
 
+class CodeOverflowException(Exception):
+	pass
+
 class QR8bitByte:
 
     def __init__(self, data):
@@ -277,7 +280,7 @@ class QRCode:
             totalDataCount += rsBlocks[i].dataCount
 
         if (buffer.getLengthInBits() > totalDataCount * 8):
-            raise Exception("code length overflow. Data size (%s) > Size available (%d))" %(buffer.getLengthInBits(), totalDataCount * 8))
+            raise CodeOverflowException("code length overflow. Data size (%s) > Size available (%d))" %(buffer.getLengthInBits(), totalDataCount * 8))
             
         #// end code
         if (buffer.getLengthInBits() + 4 <= totalDataCount * 8):
