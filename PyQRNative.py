@@ -65,9 +65,7 @@ class QRCode:
         self.modules = [None for x in range(self.moduleCount)]
 
         for row in range(self.moduleCount):
-
             self.modules[row] = [None for x in range(self.moduleCount)]
-
             for col in range(self.moduleCount):
                 self.modules[row][col] = None #//(col + row) % 3;
 
@@ -117,20 +115,16 @@ class QRCode:
                     self.modules[row + r][col + c] = False;
 
     def getBestMaskPattern(self):
-
+        ''' Returns one of 8 patterns, don't know what else'''
         minLostPoint = 0
         pattern = 0
-
         for i in range(8):
-
             self.makeImpl(True, i)
-
             lostPoint = QRUtil.getLostPoint(self)
 
             if (i == 0 or minLostPoint > lostPoint):
                 minLostPoint = lostPoint
                 pattern = i
-
         return pattern
 
     def createMovieClip(self):
@@ -527,16 +521,16 @@ class QRUtil(object):
         moduleCount = qrCode.getModuleCount()
         lostPoint = 0
         
-        qrCode_isDark = []
-        for row in range(moduleCount):
-		  for col in range(moduleCount):
-			  qrCode_isDark.append(qrCode.isDark(row,col))
+        #qrCode_isDark = []
+        #for row in range(moduleCount):
+		  #for col in range(moduleCount):
+			  #qrCode_isDark.append(qrCode.isDark(row,col))
 
         #// LEVEL1
         for row in range(moduleCount):
             for col in range(moduleCount):
                 sameCount = 0
-                dark = qrCode_isDark[moduleCount*row + col]
+                dark = qrCode.modules[row][col]
 
                 for r in range(-1, 2):
                     if (row + r < 0 or moduleCount <= row + r):
@@ -546,7 +540,7 @@ class QRUtil(object):
                             continue
                         if (r == 0 and c == 0):
                             continue
-                        if (dark == qrCode_isDark[moduleCount*(row + r) + col + c] ):
+                        if (dark == qrCode.modules[row + r][col + c] ):
                             sameCount+=1
                 if (sameCount > 5):
                     lostPoint += (3 + sameCount - 5)
@@ -555,33 +549,33 @@ class QRUtil(object):
         for row in range(moduleCount - 1):
             for col in range(moduleCount - 1):
                 count = 0;
-                if (qrCode_isDark[moduleCount*row +     col]     ): count+=1
-                if (qrCode_isDark[moduleCount*(row + 1)+ col ]    ): count+=1
-                if (qrCode_isDark[moduleCount*(row) +     col + 1] ): count+=1
-                if (qrCode_isDark[moduleCount*(row + 1) + col + 1] ): count+=1
+                if (qrCode.modules[row][col]     ): count+=1
+                if (qrCode.modules[row + 1][ col ]    ): count+=1
+                if (qrCode.modules[row][col + 1] ): count+=1
+                if (qrCode.modules[row + 1][col + 1] ): count+=1
                 if (count == 0 or count == 4): lostPoint += 3
 
         #// LEVEL3
         for row in range(moduleCount):
             for col in range(moduleCount - 6):
-                if (qrCode_isDark[moduleCount*row + col]
-                        and not qrCode_isDark[moduleCount*(row) + col + 1]
-                        and  qrCode_isDark[moduleCount*(row) + col + 2]
-                        and  qrCode_isDark[moduleCount*(row) + col + 3]
-                        and  qrCode_isDark[moduleCount*(row) + col + 4]
-                        and not qrCode_isDark[moduleCount*(row) + col + 5]
-                        and  qrCode_isDark[moduleCount*(row) + col + 6] ):
+                if (qrCode.modules[row][col]
+                        and not qrCode.modules[row][col + 1]
+                        and  qrCode.modules[row][ col + 2]
+                        and  qrCode.modules[row][col + 3]
+                        and  qrCode.modules[row][ col + 4]
+                        and not qrCode.modules[row][col + 5]
+                        and  qrCode.modules[row][ col + 6] ):
                     lostPoint += 40
 
         for col in range(moduleCount):
             for row in range(moduleCount - 6):
-                if (qrCode_isDark[moduleCount*row + col]
-                        and not qrCode_isDark[moduleCount*(row + 1) + col]
-                        and  qrCode_isDark[moduleCount*(row + 2) + col]
-                        and  qrCode_isDark[moduleCount*(row + 3) + col]
-                        and  qrCode_isDark[moduleCount*(row + 4) + col]
-                        and not qrCode_isDark[moduleCount*(row + 5) + col]
-                        and  qrCode_isDark[moduleCount*(row + 6) + col] ):
+                if (qrCode.modules[row][col]
+                        and not qrCode.modules[row + 1][col]
+                        and  qrCode.modules[row + 2][ col]
+                        and  qrCode.modules[row + 3][ col]
+                        and  qrCode.modules[row + 4][ col]
+                        and not qrCode.modules[row + 5][ col]
+                        and  qrCode.modules[row + 6][ col] ):
                     lostPoint += 40
 
         #// LEVEL4
@@ -589,7 +583,7 @@ class QRUtil(object):
 
         for col in range(moduleCount):
             for row in range(moduleCount):
-                if (qrCode_isDark[moduleCount*row + col] ):
+                if (qrCode.modules[row][col] ):
                     darkCount+=1
 
         ratio = abs(100 * darkCount / moduleCount / moduleCount - 50) / 5
