@@ -123,9 +123,9 @@ class QRCode:
 
         for i in range(8):
 
-            self.makeImpl(True, i);
+            self.makeImpl(True, i)
 
-            lostPoint = QRUtil.getLostPoint(self);
+            lostPoint = QRUtil.getLostPoint(self)
 
             if (i == 0 or minLostPoint > lostPoint):
                 minLostPoint = lostPoint
@@ -521,41 +521,32 @@ class QRUtil(object):
 
         else:
             raise Exception("type:" + type)
+
     @staticmethod
     def getLostPoint(qrCode):
-
-        moduleCount = qrCode.getModuleCount();
-
-        lostPoint = 0;
+        moduleCount = qrCode.getModuleCount()
+        lostPoint = 0
 
         #// LEVEL1
-
         for row in range(moduleCount):
-
             for col in range(moduleCount):
-
-                sameCount = 0;
-                dark = qrCode.isDark(row, col);
+                sameCount = 0
+                dark = qrCode.isDark(row, col)
 
                 for r in range(-1, 2):
-
                     if (row + r < 0 or moduleCount <= row + r):
                         continue
-
                     for c in range(-1, 2):
-
                         if (col + c < 0 or moduleCount <= col + c):
                             continue
                         if (r == 0 and c == 0):
                             continue
-
                         if (dark == qrCode.isDark(row + r, col + c) ):
                             sameCount+=1
                 if (sameCount > 5):
                     lostPoint += (3 + sameCount - 5)
 
         #// LEVEL2
-
         for row in range(moduleCount - 1):
             for col in range(moduleCount - 1):
                 count = 0;
@@ -563,11 +554,9 @@ class QRUtil(object):
                 if (qrCode.isDark(row + 1, col    ) ): count+=1
                 if (qrCode.isDark(row,     col + 1) ): count+=1
                 if (qrCode.isDark(row + 1, col + 1) ): count+=1
-                if (count == 0 or count == 4):
-                    lostPoint += 3
+                if (count == 0 or count == 4): lostPoint += 3
 
         #// LEVEL3
-
         for row in range(moduleCount):
             for col in range(moduleCount - 6):
                 if (qrCode.isDark(row, col)
@@ -591,8 +580,7 @@ class QRUtil(object):
                     lostPoint += 40
 
         #// LEVEL4
-
-        darkCount = 0;
+        darkCount = 0
 
         for col in range(moduleCount):
             for row in range(moduleCount):
