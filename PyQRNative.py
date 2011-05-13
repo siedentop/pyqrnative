@@ -85,6 +85,20 @@ class QRCode:
             self.dataCache = QRCode.createData(self.typeNumber, self.errorCorrectLevel, self.dataList)
         self.mapData(self.dataCache, maskPattern)
 
+    def getMinimumSize(self):
+	''' Returns the minimum size required for the data and error correction level or typeNumber, which ever is larger '''
+	minsize = self.typeNumber
+	fitting = False
+	while not fitting:
+		try:
+			QRCode.createData(minsize, self.errorCorrectLevel, self.dataList)
+		except CodeOverflowException:
+			minsize += 1
+		else:
+			#fitting = True # Not really necessary
+			return minsize
+
+
     def setupPositionProbePattern(self, row, col):
 
         for r in range(-1, 8):
