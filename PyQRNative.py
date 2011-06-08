@@ -41,9 +41,10 @@ class QR8bitByte:
         return self.data
 
 class QRCode:
-    def __init__(self, typeNumber, errorCorrectLevel):
+    def __init__(self, typeNumber, errorCorrectLevel, boxSize=10):
         self.typeNumber = typeNumber
         self.errorCorrectLevel = errorCorrectLevel
+        self.boxSize = boxSize
         self.modules = None
         self.moduleCount = 0
         self.dataCache = None
@@ -131,9 +132,9 @@ class QRCode:
     def createMovieClip(self):
         raise Exception("Method not relevant to Python port")
     def makeImage(self):
-        boxsize = 10 #pixels per box
+        boxSize = self.boxSize #pixels per box
         offset = 4 #boxes as border
-        pixelsize = (self.getModuleCount() + offset + offset) * boxsize
+        pixelsize = (self.getModuleCount() + offset + offset) * boxSize
 
         im = Image.new("RGB", (pixelsize, pixelsize), "white")
         d = ImageDraw.Draw(im)
@@ -141,9 +142,9 @@ class QRCode:
         for r in range(self.getModuleCount()):
             for c in range(self.getModuleCount()):
                 if (self.isDark(r, c) ):
-                    x = (c + offset) * boxsize
-                    y = (r + offset) * boxsize
-                    b = [(x,y),(x+boxsize,y+boxsize)]
+                    x = (c + offset) * boxSize
+                    y = (r + offset) * boxSize
+                    b = [(x,y),(x+boxSize-1,y+boxSize-1)]
                     d.rectangle(b,fill="black")
         del d
         return im
