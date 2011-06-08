@@ -25,8 +25,8 @@ from PIL import Image, ImageDraw
 class CodeOverflowException(Exception):
     pass
 
-class QR8bitByte:
 
+class QR8bitByte:
     def __init__(self, data):
         self.mode = QRMode.MODE_8BIT_BYTE
         self.data = data
@@ -41,6 +41,7 @@ class QR8bitByte:
 
     def __repr__(self):
         return self.data
+
 
 class QRCode:
     PAD0 = 0xEC
@@ -366,11 +367,13 @@ class QRMode:
     MODE_8BIT_BYTE = 1 << 2
     MODE_KANJI = 1 << 3
 
+
 class QRErrorCorrectLevel:
     L = 1
     M = 0
     Q = 3
     H = 2
+
 
 class QRMaskPattern:
     PATTERN000 = 0
@@ -381,6 +384,7 @@ class QRMaskPattern:
     PATTERN101 = 5
     PATTERN110 = 6
     PATTERN111 = 7
+
 
 class QRUtil(object):
     PATTERN_POSITION_TABLE = [
@@ -598,20 +602,6 @@ class QRMath:
         return EXP_TABLE[n]
 
 
-EXP_TABLE = [x for x in range(256)]
-
-LOG_TABLE = [x for x in range(256)]
-
-for i in range(8):
-    EXP_TABLE[i] = 1 << i
-
-for i in range(8, 256):
-    EXP_TABLE[i] = EXP_TABLE[i - 4] ^ EXP_TABLE[i - 5] ^ EXP_TABLE[i - 6] ^ EXP_TABLE[i - 8]
-
-for i in range(255):
-    LOG_TABLE[EXP_TABLE[i] ] = i
-
-
 class QRPolynomial:
     def __init__(self, num, shift):
         if (len(num) == 0):
@@ -659,8 +649,8 @@ class QRPolynomial:
         # recursive call
         return QRPolynomial(num, 0).mod(e)
 
-class QRRSBlock:
 
+class QRRSBlock:
     RS_BLOCK_TABLE = [
         #// L
         #// M
@@ -973,3 +963,25 @@ class QRBitBuffer:
         if bit:
             self.buffer[bufIndex] |= (0x80 >> (self.length % 8) )
         self.length+=1
+
+
+EXP_TABLE = None
+LOG_TABLE = None
+
+def precalculate_tables():
+    global EXP_TABLE
+    global LOG_TABLE
+
+    EXP_TABLE = [x for x in range(256)]
+    LOG_TABLE = [x for x in range(256)]
+
+    for i in range(8):
+        EXP_TABLE[i] = 1 << i
+
+    for i in range(8, 256):
+        EXP_TABLE[i] = EXP_TABLE[i-4] ^ EXP_TABLE[i-5] ^ EXP_TABLE[i-6] ^ EXP_TABLE[i-8]
+
+    for i in range(255):
+        LOG_TABLE[EXP_TABLE[i]] = i
+
+precalculate_tables()
