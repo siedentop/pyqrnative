@@ -21,7 +21,7 @@ from PIL import Image, ImageDraw
 
 
 class CodeOverflowException(Exception):
-	pass
+    pass
 
 class QR8bitByte:
 
@@ -84,17 +84,17 @@ class QRCode:
         self.mapData(self.dataCache, maskPattern)
 
     def getMinimumSize(self):
-	''' Returns the minimum size required for the data and error correction level or typeNumber, which ever is larger '''
-	minsize = self.typeNumber
-	fitting = False
-	while not fitting:
-		try:
-			QRCode.createData(minsize, self.errorCorrectLevel, self.dataList)
-		except CodeOverflowException:
-			minsize += 1
-		else:
-			#fitting = True # Not really necessary
-			return minsize
+        ''' Returns the minimum size required for the data and error correction level or typeNumber, which ever is larger '''
+        minsize = self.typeNumber
+        fitting = False
+        while not fitting:
+            try:
+                QRCode.createData(minsize, self.errorCorrectLevel, self.dataList)
+            except CodeOverflowException:
+                minsize += 1
+            else:
+                #fitting = True # Not really necessary
+                return minsize
 
 
     def setupPositionProbePattern(self, row, col):
@@ -523,8 +523,8 @@ class QRUtil(object):
         
         #qrCode_isDark = []
         #for row in range(moduleCount):
-		  #for col in range(moduleCount):
-			  #qrCode_isDark.append(qrCode.isDark(row,col))
+          #for col in range(moduleCount):
+              #qrCode_isDark.append(qrCode.isDark(row,col))
 
         #// LEVEL1
         for row in range(moduleCount):
