@@ -47,10 +47,13 @@ class QRCode:
     PAD0 = 0xEC
     PAD1 = 0x11
 
-    def __init__(self, typeNumber, errorCorrectLevel, boxSize=10):
+    def __init__(self, typeNumber, errorCorrectLevel, boxSize=10, margin=4):
         self.typeNumber = typeNumber
         self.errorCorrectLevel = errorCorrectLevel
         self.boxSize = boxSize
+        # According to the specification, the minimum quiet zone size is 4
+        # modules (4 times boxSize)
+        self.margin = margin
         self.modules = None
         self.moduleCount = 0
         self.dataCache = None
@@ -142,17 +145,17 @@ class QRCode:
 
     def makeImage(self):
         boxSize = self.boxSize #pixels per box
-        offset = 4 #boxes as border
-        pixelsize = (self.getModuleCount() + offset + offset) * boxSize
+        margin = self.margin #boxes as border
+        pixelsize = (self.getModuleCount() + 2 * margin) * boxSize
 
-        im = Image.new("RGB", (pixelsize, pixelsize), "white")
+        im = Image.new("1", (pixelsize, pixelsize), "white")
         d = ImageDraw.Draw(im)
 
         for r in range(self.getModuleCount()):
             for c in range(self.getModuleCount()):
                 if (self.isDark(r, c) ):
-                    x = (c + offset) * boxSize
-                    y = (r + offset) * boxSize
+                    x = (c + margin) * boxSize
+                    y = (r + margin) * boxSize
                     b = [(x,y),(x+boxSize-1,y+boxSize-1)]
                     d.rectangle(b,fill="black")
         del d
@@ -985,3 +988,24 @@ def precalculate_tables():
         LOG_TABLE[EXP_TABLE[i]] = i
 
 precalculate_tables()
+
+
+def render_QRCode_image(data, typeNumber, errorCorrectLevel='L', boxSize=10, margin=4):
+    """Handy shortcut function
+
+    Generates a QR Code with the desired parameters and returns a PIL Image.
+
+    Parameters:
+    data              = String with the data to be encoded
+    typeNumber        = QR Code version, this defines how many characters can
+                        be encoded
+    errorCorrectLevel = One of 'L', 'M', 'Q', 'H'
+    boxSize           = Size of each square in the QR Code (in pixels)
+    margin            = Size of the quiet zone (measured in modules)
+
+    """
+
+    qr = QRCode(typeNumber, getattr(QRErrorCorrectLevel, errorCorrectLevel), boxSize=boxSize, margin=margin)
+    qr.addData(data)
+    qr.make()
+    return qr.makeImage()
