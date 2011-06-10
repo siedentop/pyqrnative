@@ -988,3 +988,24 @@ def precalculate_tables():
         LOG_TABLE[EXP_TABLE[i]] = i
 
 precalculate_tables()
+
+
+def render_QRCode_image(data, typeNumber, errorCorrectLevel='L', boxSize=10, margin=4):
+    """Handy shortcut function
+
+    Generates a QR Code with the desired parameters and returns a PIL Image.
+
+    Parameters:
+    data              = String with the data to be encoded
+    typeNumber        = QR Code version, this defines how many characters can
+                        be encoded
+    errorCorrectLevel = One of 'L', 'M', 'Q', 'H'
+    boxSize           = Size of each square in the QR Code (in pixels)
+    margin            = Size of the quiet zone (measured in modules)
+
+    """
+
+    qr = QRCode(typeNumber, getattr(QRErrorCorrectLevel, errorCorrectLevel), boxSize=boxSize, margin=margin)
+    qr.addData(data)
+    qr.make()
+    return qr.makeImage()
