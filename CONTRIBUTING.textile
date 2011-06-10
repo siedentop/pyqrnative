@@ -1,0 +1,18 @@
+h1. Contributing
+
+If you want to contribute to the project just do. 
+
+h2. Code, Issues and Wiki
+* The repository is at:  https://github.com/unapiedra/QR-Generator
+* The issue tracker is here:  https://github.com/unapiedra/QR-Generator/issues
+* and a wiki will be here:  https://github.com/unapiedra/QR-Generator/wiki
+There is no webpage. 
+
+h2. Access
+
+If you'd like to get write-access to the project, just send a message via Github to the owner of the project (i.e. me).
+It will be granted but even more so if you have a patch already.
+
+h2. Issues
+
+You can create issues. If the issue is a feature request, a patch with your implementation is much appreciated. If it is a bug it will be solved (hopefully).
