@@ -47,10 +47,13 @@ class QRCode:
     PAD0 = 0xEC
     PAD1 = 0x11
 
-    def __init__(self, typeNumber, errorCorrectLevel, boxSize=10):
+    def __init__(self, typeNumber, errorCorrectLevel, boxSize=10, margin=4):
         self.typeNumber = typeNumber
         self.errorCorrectLevel = errorCorrectLevel
         self.boxSize = boxSize
+        # According to the specification, the minimum quiet zone size is 4
+        # modules (4 times boxSize)
+        self.margin = margin
         self.modules = None
         self.moduleCount = 0
         self.dataCache = None
@@ -142,8 +145,8 @@ class QRCode:
 
     def makeImage(self):
         boxSize = self.boxSize #pixels per box
-        offset = 4 #boxes as border
-        pixelsize = (self.getModuleCount() + offset + offset) * boxSize
+        margin = self.margin #boxes as border
+        pixelsize = (self.getModuleCount() + 2 * margin) * boxSize
 
         im = Image.new("1", (pixelsize, pixelsize), "white")
         d = ImageDraw.Draw(im)
@@ -151,8 +154,8 @@ class QRCode:
         for r in range(self.getModuleCount()):
             for c in range(self.getModuleCount()):
                 if (self.isDark(r, c) ):
-                    x = (c + offset) * boxSize
-                    y = (r + offset) * boxSize
+                    x = (c + margin) * boxSize
+                    y = (r + margin) * boxSize
                     b = [(x,y),(x+boxSize-1,y+boxSize-1)]
                     d.rectangle(b,fill="black")
         del d
