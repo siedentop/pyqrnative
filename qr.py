@@ -1,7 +1,7 @@
 #Copyright: 2011 Christoph Siedentop
 #License: This code is licensed under the GPLv3. For more see LICENSE
 
-from pyqrnative.PyQRNative import QRCode, QRErrorCorrectLevel, CodeOverflowException
+from PyQRNative import QRCode, QRErrorCorrectLevel, CodeOverflowException
 
 class QR():
 	''' Base QR Code API class.'''
