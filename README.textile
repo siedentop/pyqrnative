@@ -1,0 +1,7 @@
+This is a project that lets you generate QR codes for various modes. 
+It utilises the pyqrnative library and provides a useful API. 
+
+Note: 
+If you have Git version <1.7.5 please run "git submodule update". 
+
+This code is released under the AGPLv3. For more information see the file 'LICENSE'.
