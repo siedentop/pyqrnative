@@ -145,7 +145,7 @@ class QRCode:
         offset = 4 #boxes as border
         pixelsize = (self.getModuleCount() + offset + offset) * boxSize
 
-        im = Image.new("RGB", (pixelsize, pixelsize), "white")
+        im = Image.new("1", (pixelsize, pixelsize), "white")
         d = ImageDraw.Draw(im)
 
         for r in range(self.getModuleCount()):
