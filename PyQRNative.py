@@ -237,7 +237,7 @@ class QRCode:
         byteIndex = 0
 
         for col in range(self.moduleCount - 1, 0, -2):
-            if (col == 6):
+            if (col <= 6):
                 col-=1
 
             while (True):
